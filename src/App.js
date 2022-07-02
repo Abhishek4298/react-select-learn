@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import Select from 'react-select'
+import Creatable from 'react-select/creatable'
+
 import './App.css'
 
 function App() {
@@ -18,13 +19,27 @@ function App() {
 		},
 	]
 	const [newVal, setNewVal] = useState([])
-	const onChange = (value) => {
-		setNewVal(value)
+
+	const onHandleChange = (field, value) => {
+		switch (field) {
+			case 'options':
+				setNewVal(value)
+				break
+			default:
+				break
+		}
 	}
 	return (
 		<>
-			<h2>Hello First MultiSelect</h2>
-			<Select isMulti options={options} onChange={onChange}></Select>
+			<h2>Hello second Creatable MultiSelect</h2>
+
+			<Creatable
+				isClearable
+				isMulti
+				options={options}
+				onChange={(values) => onHandleChange('options', values)}
+				value={newVal}
+			/>
 			<hr />
 			{newVal.length
 				? newVal.map((elem, i) => {
