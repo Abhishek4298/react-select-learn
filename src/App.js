@@ -1,48 +1,66 @@
 import { useState } from 'react'
 import Creatable from 'react-select/creatable'
-
 import './App.css'
 
 function App() {
-	const options = [
-		{
-			value: 'foo',
-			label: 'Foo',
-		},
-		{
-			value: 'bar',
-			label: 'Bar',
-		},
-		{
-			value: 'baz',
-			label: 'Baz',
-		},
-	]
-	const [newVal, setNewVal] = useState([])
+	const [tagInputValue, setTagInputValue] = useState('')
+	const [tagValue, setTagValue] = useState('')
 
-	const onHandleChange = (field, value) => {
+	const handleChange = (field, value) => {
 		switch (field) {
-			case 'options':
-				setNewVal(value)
+			case 'tags':
+				setTagValue(value)
 				break
 			default:
 				break
 		}
 	}
+
+	const handleKeyDown = (event) => {
+		if (!tagInputValue) return
+		switch (event.key) {
+			case 'Enter':
+			case 'Tab':
+				setTagValue([...tagValue, createOption(tagInputValue)])
+				setTagInputValue('')
+				event.preventDefault()
+				break
+			default:
+				break
+		}
+	}
+
+	const createOption = (label) => ({
+		label,
+		value: label,
+	})
+
+	const handleInputChange = (value) => {
+		setTagInputValue(value)
+	}
+
 	return (
 		<>
-			<h2>Hello second Creatable MultiSelect</h2>
+			<h2>Hello third Creatable MultiSelect</h2>
+			<div className='input'>
+				<label>Ingredients</label>
+				<Creatable
+					isClearable
+					isMulti
+					components={{ DropdownIndicator: null }}
+					inputValue={tagInputValue}
+					menuIsOpen={false}
+					onChange={(value) => handleChange('tags', value)}
+					placeholder='Type something and press enter...'
+					onKeyDown={handleKeyDown}
+					onInputChange={handleInputChange}
+					value={tagValue}
+				/>
+			</div>
 
-			<Creatable
-				isClearable
-				isMulti
-				options={options}
-				onChange={(values) => onHandleChange('options', values)}
-				value={newVal}
-			/>
 			<hr />
-			{newVal.length
-				? newVal.map((elem, i) => {
+			{tagValue.length
+				? tagValue.map((elem, i) => {
 						return (
 							<div key={i}>
 								<h2>{elem.value}</h2>
