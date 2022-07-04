@@ -1,73 +1,53 @@
-import { useState } from 'react'
-import Creatable from 'react-select/creatable'
+import React, { useState, useCallback } from 'react'
+import AsyncCreatableSelect from 'react-select/creatable'
+import makeAnimated from 'react-select/animated'
 import './App.css'
 
 function App() {
-	const [tagInputValue, setTagInputValue] = useState('')
-	const [tagValue, setTagValue] = useState('')
+	const [value, setValue] = useState()
+	const [options, setOptions] = useState([
+		{ value: 'apple', label: 'Apple' },
+		{ value: 'banana', label: 'Banana' },
+		{ value: 'orange', label: 'Orange' },
+		{ value: 'berry', label: 'Berry' },
+	])
+	const animatedComponents = makeAnimated()
 
-	const handleChange = (field, value) => {
-		switch (field) {
-			case 'tags':
-				setTagValue(value)
-				break
-			default:
-				break
-		}
-	}
+	const handleChange = useCallback((inputValue) => setValue(inputValue), [])
 
-	const handleKeyDown = (event) => {
-		if (!tagInputValue) return
-		switch (event.key) {
-			case 'Enter':
-			case 'Tab':
-				setTagValue([...tagValue, createOption(tagInputValue)])
-				setTagInputValue('')
-				event.preventDefault()
-				break
-			default:
-				break
-		}
-	}
+	const handleCreate = useCallback(
+		(inputValue) => {
+			const newValue = { value: inputValue.toLowerCase(), label: inputValue }
+			setOptions([...options, newValue])
+			setValue(newValue)
+		},
+		[options],
+	)
 
-	const createOption = (label) => ({
-		label,
-		value: label,
-	})
-
-	const handleInputChange = (value) => {
-		setTagInputValue(value)
-	}
-
+	const loadOptions = (inputValue, callback) =>
+		setTimeout(() => {
+			callback(
+				options.filter((item) =>
+					item.label.toLowerCase().includes(inputValue.toLowerCase()),
+				),
+			)
+		}, 3000)
 	return (
 		<>
-			<h2>Hello third Creatable MultiSelect</h2>
-			<div className='input'>
-				<label>Ingredients</label>
-				<Creatable
-					isClearable
+			<h2>Hello Fourth async Creatable MultiSelect</h2>
+			<div className='App'>
+				<AsyncCreatableSelect
+					components={animatedComponents} // animate builtin components
 					isMulti
-					components={{ DropdownIndicator: null }}
-					inputValue={tagInputValue}
-					menuIsOpen={false}
-					onChange={(value) => handleChange('tags', value)}
-					placeholder='Type something and press enter...'
-					onKeyDown={handleKeyDown}
-					onInputChange={handleInputChange}
-					value={tagValue}
+					isClearable
+					value={value}
+					options={options}
+					onChange={handleChange}
+					onCreateOption={handleCreate}
+					cacheOptions
+					loadOptions={loadOptions}
 				/>
 			</div>
-
-			<hr />
-			{tagValue.length
-				? tagValue.map((elem, i) => {
-						return (
-							<div key={i}>
-								<h2>{elem.value}</h2>
-							</div>
-						)
-				  })
-				: null}
 		</>
 	)
 }
