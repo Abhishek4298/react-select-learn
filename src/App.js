@@ -6,20 +6,31 @@ import './App.css'
 function App() {
 	const [value, setValue] = useState()
 	const [options, setOptions] = useState([
-		{ value: 'apple', label: 'Apple' },
-		{ value: 'banana', label: 'Banana' },
-		{ value: 'orange', label: 'Orange' },
-		{ value: 'berry', label: 'Berry' },
+		{
+			'id': 1,
+			'label': 'React',
+			'value': 'react',
+		},
+		{
+			'id': 2,
+			'label': 'Node',
+			'value': 'node',
+		},
+		{
+			'id': 3,
+			'label': 'Aws',
+			'value': 'aws',
+		},
 	])
-	const animatedComponents = makeAnimated()
 
+	const animatedComponents = makeAnimated()
 	const handleChange = useCallback((inputValue) => setValue(inputValue), [])
 
 	const handleCreate = useCallback(
 		(inputValue) => {
 			const newValue = { value: inputValue.toLowerCase(), label: inputValue }
 			setOptions([...options, newValue])
-			setValue(newValue)
+			setValue([...options, newValue])
 		},
 		[options],
 	)
@@ -32,9 +43,12 @@ function App() {
 				),
 			)
 		}, 3000)
+
 	return (
 		<>
-			<h2>Hello Fourth async Creatable MultiSelect</h2>
+			<h1>React APP on Heroku</h1>
+			<hr />
+			<h2>Languages known by Abhishek</h2>
 			<div className='App'>
 				<AsyncCreatableSelect
 					components={animatedComponents} // animate builtin components
@@ -47,7 +61,14 @@ function App() {
 					cacheOptions
 					loadOptions={loadOptions}
 				/>
+				<hr />
+
+				<img
+					src='https://railsfactory.com/assets/images/reactjs-img.png'
+					alt='test Img'
+				/>
 			</div>
+			<hr />
 		</>
 	)
 }
