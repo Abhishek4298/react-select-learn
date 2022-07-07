@@ -25,5 +25,9 @@
 			"react-app/jest"
 		]
 	},
-	"browserslist": []
+	"browserslist": [],
+	"engines": {
+		"node": "v14.19.3",
+		"npm": "8.13.2"
+	}
 }
